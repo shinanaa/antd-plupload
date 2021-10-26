@@ -10,6 +10,13 @@ function App() {
             uploaded: true,
             name: '文件名',
             url: 'https://www.ltzhdj.cn/data/uploads/20210326/preview/default/file/2021/10/19/c22d9041866ebeaa4ab04c758641ea28/null/1634612965263.png',
+        },
+        {
+            id: '2',
+            type: 'video',
+            uploaded: true,
+            name: '文件名2',
+            url: 'https://www.ltzhdj.cn/data/uploads/20210326/preview/default/file/2021/10/19/c22d9041866ebeaa4ab04c758641ea28/null/1634612965263.png',
         }
     ]
     return (
