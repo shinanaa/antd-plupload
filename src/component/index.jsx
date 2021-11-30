@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import React from 'react';
 import {Button, Space, List, Row, Col, Progress, message} from 'antd'
-import {DeleteOutlined, UploadOutlined, PaperClipOutlined, LoadingOutlined} from '@ant-design/icons'
-import style from './index.less'
+import {DeleteOutlined, UploadOutlined, PaperClipOutlined, LoadingOutlined, FileAddOutlined} from '@ant-design/icons'
+import style from './index.module.less'
 
 const plUploadJs = require('plupload/js/plupload.full.min')
 
@@ -13,11 +13,10 @@ const EVENTS = [
 ];
 
 class PlUpload extends React.Component {
-    constructor() {
-        super();
-        this.id = new Date().valueOf();
-        this.state = {files: [], uploadState: false, progress: {}};
-        this.container = null;
+    id = new Date().valueOf();
+    container = null
+    state = {
+        files: [], uploadState: false, progress: {}
     }
 
     checkUploader() {
@@ -183,12 +182,12 @@ class PlUpload extends React.Component {
             };
             return (
                 <React.Fragment key={val.id}>
-                    <Row gutter={10} wrap={false} className='listItem' style={{color: '#8c8c8c'}}>
+                    <Row gutter={10} wrap={false} className={style.listItem} style={{color: '#8c8c8c'}}>
                         <Col flex='15px'>{this.state.uploadState && val.uploaded !== true ? <LoadingOutlined/> : <PaperClipOutlined/>}</Col>
-                        <Col flex='auto' className="fileLink">
+                        <Col flex='auto' className={[style.fileLink, !val.uploaded && style.fileAdd]}>
                             <a target='_blank' title={val.url} href={val.url}>{val.name}</a>
                         </Col>
-                        <Col flex="15px" onClick={removeFile}><DeleteOutlined className="deleteBtn"/></Col>
+                        <Col flex="15px" onClick={removeFile}><DeleteOutlined className={style.deleteBtn}/></Col>
                     </Row>
                     {
                         (() => {
@@ -251,14 +250,14 @@ class PlUpload extends React.Component {
     render() {
 
         const list = this.list();
-
+        const {files} = this.state
         return (
             <div id={`plupload_${this.props.id}`} className={'my-list'} ref={ref => (this.container = ref)}>
                 <Space>
                     {/*选择文件*/}
                     <Button
                         id={this.getComponentId()}
-                        icon={<UploadOutlined/>}
+                        icon={this.props.autoUpload ? <UploadOutlined/> : <FileAddOutlined /> }
                     >
                         {this.props.buttonSelect || 'select'}
                     </Button>
@@ -267,8 +266,9 @@ class PlUpload extends React.Component {
                         !this.props.autoUpload &&
                         <Button
                             type='primary'
+                            icon={<UploadOutlined/>}
                             onClick={this.doUpload}
-                            disabled={this.state.files.length === 0 ? 'disabled' : false}
+                            disabled={files.length === 0 || files.every((listItem) => listItem.uploaded) ? 'disabled' : false}
                         >
                             {this.props.buttonUpload || 'upload'}
                         </Button>
